@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Portfolio · wybór wersji</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap">
+<style>
+:root{--bg:#f3f3f1;--fg:#141414;--mut:#6f6f69;--line:#dcdcd6;--card:#ffffff;--ok:#1f8a4c;--warn:#a15c00;
+  --sans:"Inter",system-ui,sans-serif;--mono:"JetBrains Mono",ui-monospace,Menlo,monospace}
+@media (prefers-color-scheme:dark){:root{--bg:#111111;--fg:#eeeeea;--mut:#9a9a93;--line:#2a2a28;--card:#191919;--ok:#5fd394;--warn:#f0b35a;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.55 var(--sans)}
+.wrap{max-width:1180px;margin:0 auto;padding:calc(40px + env(safe-area-inset-top,0px)) max(18px,env(safe-area-inset-right,0px)) 60px max(18px,env(safe-area-inset-left,0px));display:grid;gap:28px}
+h1{margin:0;font-size:clamp(28px,4vw,42px);letter-spacing:-.02em;line-height:1.1}
+.lead{margin:6px 0 0;color:var(--mut);max-width:70ch}
+.status{display:flex;gap:10px 20px;flex-wrap:wrap;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 18px;font-size:14px}
+.status b{font-weight:600}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--ok);flex:none}
+.status.demo .dot{background:var(--warn)}
+.status code{font:13px var(--mono);background:var(--bg);padding:2px 6px;border-radius:4px;overflow-wrap:anywhere}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
+.card{display:grid;text-decoration:none;color:inherit;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;transition:transform .4s cubic-bezier(.2,.7,.2,1),box-shadow .4s}
+.card:hover{transform:translateY(-4px);box-shadow:0 20px 40px -24px rgba(0,0,0,.4)}
+.card:focus-visible{outline:2px solid #3b82f6;outline-offset:3px}
+.card .im{aspect-ratio:16/10;background:#222;overflow:hidden;position:relative}
+.card img{width:100%;height:100%;object-fit:cover;display:block}
+.card .im span{position:absolute;left:14px;top:12px;font:12px var(--mono);color:#fff;background:rgba(0,0,0,.45);padding:3px 8px;border-radius:99px}
+.card .tx{padding:16px 18px 20px;display:grid;gap:6px}
+.card h2{margin:0;font-size:20px;letter-spacing:-.01em}
+.card p{margin:0;color:var(--mut);font-size:14px}
+.card .go{font:12px var(--mono);color:var(--fg);margin-top:6px}
+.how{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+.how div{border-top:1px solid var(--line);padding-top:14px}
+.how h3{margin:0 0 6px;font-size:14px}
+.how p,.how li{margin:0;color:var(--mut);font-size:14px}
+.how pre{margin:8px 0 0;font:12.5px/1.6 var(--mono);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:10px 12px;overflow-x:auto;color:var(--fg)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1 id="h">Portfolio</h1>
+    <p class="lead">Trzy wersje tej samej strony, zasilane tymi samymi zdjęciami. Wybierz wersję, żeby zobaczyć ją na swoich kadrach.</p>
+  </header>
+  <div class="status" id="status"><span class="dot"></span><span>Wczytuję dane…</span></div>
+  <div class="cards">
+    <a class="card" href="kinetic/"><div class="im"><img id="i0" alt=""><span>A</span></div><div class="tx"><h2>Kinetic</h2><p>Odważna typografia, która rozciąga się pod kursorem, i galeria jadąca w poziomie.</p><span class="go">Otwórz →</span></div></a>
+    <a class="card" href="flythrough/"><div class="im"><img id="i1" alt=""><span>B</span></div><div class="tx"><h2>Flythrough</h2><p>Przewijanie to lot przez zdjęcia zawieszone w przestrzeni 3D.</p><span class="go">Otwórz →</span></div></a>
+    <a class="card" href="focus/"><div class="im"><img id="i2" alt=""><span>C</span></div><div class="tx"><h2>Focus</h2><p>Strona działa jak aparat: ostrość podąża za kursorem, kliknięcie robi zdjęcie.</p><span class="go">Otwórz →</span></div></a>
+  </div>
+  <section class="how">
+    <div><h3>1. Ułóż zdjęcia w folderach</h3><p>Kategoria, potem seria. Nazwa folderu serii staje się jej tytułem.</p>
+<pre>photos/
+  lotnictwo/
+    radom-air-show-2026/
+      DSC01234.jpg
+  motoryzacja/
+    track-day-poznan/</pre></div>
+    <div><h3>2. Albo wskaż folder na NAS</h3><p>W pliku <code>portfolio.config.json</code> ustaw <code>photosDir</code> na zamontowany udział, np.:</p>
+<pre>"photosDir": "/Volumes/Portfolio"      (Mac)
+"photosDir": "/mnt/nas/portfolio"      (Ubuntu)</pre></div>
+    <div><h3>3. Odśwież stronę</h3><p>Serwer sam czyta nowe zdjęcia, ich dane EXIF i robi zmniejszone wersje. Szczegóły są w pliku README.md.</p></div>
+  </section>
+</div>
+<script type="module">
+import { loadPortfolio, esc, nPhotos, nSeries } from './shared/portfolio.js';
+const st = document.getElementById('status');
+try {
+  const pf = await loadPortfolio();
+  document.getElementById('h').textContent = `Portfolio · ${pf.config.name}`;
+  const pics = pf.highlightPhotos;
+  ['i0', 'i1', 'i2'].forEach((id, k) => { const p = pics[k % pics.length]; if (p) document.getElementById(id).src = pf.img(p, 1200); });
+  if (pf.demo) {
+    st.classList.add('demo');
+    st.innerHTML = `<span class="dot"></span><span><b>Brak zdjęć</b>${pf.photosDir ? ` w folderze <code>${esc(pf.photosDir)}</code>` : ''}. Strony pokazują przykładowe grafiki.</span>`;
+  } else {
+    st.innerHTML = `<span class="dot"></span><span><b>${nPhotos(pf.photos.length)}</b> (${nSeries(pf.series.length)})${pf.photosDir ? ` z folderu <code>${esc(pf.photosDir)}</code>` : ''}${pf.resize ? '' : ' (bez zmniejszania: brak biblioteki sharp)'}</span>`;
+  }
+} catch (e) {
+  st.classList.add('demo');
+  st.innerHTML = `<span class="dot"></span><span>${esc(e.message)}</span>`;
+}
+</script>
+</body>
+</html>

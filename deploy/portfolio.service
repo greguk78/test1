@@ -1,0 +1,23 @@
+# Szablon usługi systemd dla Ubuntu (tryb na żywo, serwer Node).
+# Sprawdź ścieżki i użytkownika, potem:
+#   sudo cp deploy/portfolio.service /etc/systemd/system/
+#   sudo systemctl enable --now portfolio
+#   journalctl -u portfolio -f        # logi
+[Unit]
+Description=Portfolio fotografa
+After=network-online.target remote-fs.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=portfolio
+WorkingDirectory=/opt/portfolio
+Environment=NODE_ENV=production
+Environment=PORT=4321
+# Environment=PHOTOS_DIR=/mnt/nas/portfolio
+ExecStart=/usr/bin/node server.mjs
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

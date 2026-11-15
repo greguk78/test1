@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Portfolio · Focus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500&display=swap">
+<style>
+/* Focus: the site behaves like a camera. Everything is out of focus until you look at it; a click takes the shot. */
+:root{--bg:#0b0b0c;--ink:#f1f1ee;--dim:rgba(241,241,238,.55);--line:rgba(241,241,238,.16);--af:#7dff9a;
+  --sans:"Inter",system-ui,sans-serif;--head:"Schibsted Grotesk",system-ui,sans-serif;--mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --ease:cubic-bezier(.77,0,.18,1);--out:cubic-bezier(.2,.7,.2,1);--pv-font:"Inter",system-ui,sans-serif;--x:50%;--y:50%;--r:150px;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans)}
+img{display:block;max-width:100%}
+a{color:inherit}
+button:focus-visible,a:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--af);outline-offset:3px}
+.pad{padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px))}
+.stage{position:relative;height:100vh;height:100svh;min-height:520px;overflow:hidden;cursor:crosshair;user-select:none;background:#000;touch-action:pan-y}
+.stage img.layer{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
+.blur{filter:blur(18px) brightness(.72);transform:scale(1.08)}
+.sharp{-webkit-mask-image:radial-gradient(circle var(--r) at var(--x) var(--y),#000 55%,transparent 100%);mask-image:radial-gradient(circle var(--r) at var(--x) var(--y),#000 55%,transparent 100%)}
+.stage.full .sharp{-webkit-mask-image:none;mask-image:none}
+.stage.full .af,.stage.full .thirds{opacity:0}
+.af{position:absolute;left:var(--x);top:var(--y);width:86px;height:64px;transform:translate(-50%,-50%);pointer-events:none;transition:width .3s,height .3s,opacity .3s}
+.af i{position:absolute;width:14px;height:14px;border:2px solid var(--ink);transition:border-color .2s}
+.af i:nth-child(1){left:0;top:0;border-right:0;border-bottom:0}.af i:nth-child(2){right:0;top:0;border-left:0;border-bottom:0}
+.af i:nth-child(3){left:0;bottom:0;border-right:0;border-top:0}.af i:nth-child(4){right:0;bottom:0;border-left:0;border-top:0}
+.stage.lock .af i{border-color:var(--af)}
+.stage.lock .af{width:70px;height:52px}
+.frame{position:absolute;inset:max(14px,env(safe-area-inset-top,0px)) 14px 14px;border:1px solid rgba(255,255,255,.16);pointer-events:none}
+.thirds{position:absolute;inset:0;pointer-events:none;transition:opacity .3s;background:linear-gradient(90deg,transparent calc(33.33% - .5px),rgba(255,255,255,.11) 33.33%,transparent calc(33.33% + .5px),transparent calc(66.66% - .5px),rgba(255,255,255,.11) 66.66%,transparent calc(66.66% + .5px)),linear-gradient(180deg,transparent calc(33.33% - .5px),rgba(255,255,255,.11) 33.33%,transparent calc(33.33% + .5px),transparent calc(66.66% - .5px),rgba(255,255,255,.11) 66.66%,transparent calc(66.66% + .5px))}
+.osd{position:absolute;left:0;right:0;display:flex;justify-content:space-between;align-items:center;gap:16px;font:500 12px var(--mono);letter-spacing:.06em;pointer-events:none;text-shadow:0 1px 8px rgba(0,0,0,.65)}
+.osd.top{top:calc(28px + env(safe-area-inset-top,0px))}.osd.bot{bottom:calc(28px + env(safe-area-inset-bottom,0px))}
+.osd .lbl{display:flex;gap:14px;align-items:center;min-width:0}
+.osd .lbl b{border:1px solid var(--ink);padding:1px 6px}
+.cam{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bat{display:inline-block;width:24px;height:11px;border:1.5px solid var(--ink);border-radius:2px;position:relative}
+.bat::before{content:"";position:absolute;inset:1.5px;right:5px;background:var(--ink)}
+.bat::after{content:"";position:absolute;right:-4px;top:2.5px;width:2px;height:4px;background:var(--ink)}
+.vals{display:flex;gap:clamp(12px,2.4vw,34px);font-size:clamp(12px,1.3vw,16px)}
+.scale{display:flex;gap:4px;align-items:flex-end}
+.scale i{width:1px;height:6px;background:var(--ink)}
+.scale i:nth-child(5n+1){height:10px}
+.scale i.c{height:12px;background:var(--af);width:2px}
+.title{position:absolute;left:0;top:calc(62px + env(safe-area-inset-top,0px));pointer-events:none;max-width:min(80%,900px)}
+.title h1{margin:0;font:500 clamp(26px,3.4vw,48px)/1.02 var(--head);letter-spacing:-.025em;text-shadow:0 2px 20px rgba(0,0,0,.5);text-wrap:balance}
+.title p{margin:8px 0 0;font:400 12px var(--mono);color:var(--dim)}
+.ctrl{position:absolute;right:max(18px,env(safe-area-inset-right,0px));top:calc(60px + env(safe-area-inset-top,0px));display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;z-index:2;max-width:60%}
+.ctrl button{font:400 11px var(--mono);color:var(--ink);background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.3);border-radius:99px;padding:6px 12px;cursor:pointer;backdrop-filter:blur(6px)}
+.ctrl button:hover{border-color:#fff}
+.ctrl button[hidden]{display:none}
+.hint{position:absolute;left:50%;top:50%;transform:translate(-50%,64px);font:400 11px var(--mono);letter-spacing:.12em;text-transform:uppercase;pointer-events:none;transition:opacity .5s;text-align:center;padding:0 20px;text-shadow:0 1px 8px rgba(0,0,0,.7)}
+.flash{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none}
+.flash.go{animation:blink .32s ease-out}
+@keyframes blink{30%{opacity:1}100%{opacity:0}}
+.sec{padding-block:12vh 0}
+.sec-h{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin:0 0 24px;font:500 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
+.sec-h h2{margin:0;font:inherit;color:var(--ink)}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px 14px}
+.scard{cursor:pointer;margin:0;border:0;padding:0;background:none;color:inherit;text-align:left;font:inherit}
+.scard .ph{overflow:hidden;aspect-ratio:4/3;background:#151517}
+.scard img{width:100%;height:100%;object-fit:cover;filter:blur(9px) brightness(.85);transform:scale(1.07);transition:filter .7s var(--out),transform 1s var(--out)}
+.scard:hover img,.scard:focus-visible img{filter:none;transform:scale(1)}
+.scard .cap{display:flex;justify-content:space-between;gap:12px;padding-top:10px;font:400 11px var(--mono);color:var(--dim)}
+.scard .cap b{font:500 16px var(--head);color:var(--ink)}
+.about{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:40px;padding-block:16vh 0;align-items:end}
+.about h2{margin:0;font:500 clamp(34px,5vw,72px)/1 var(--head);letter-spacing:-.03em}
+.about h2 span{color:var(--dim)}
+.about p{margin:0 0 24px;line-height:1.6;color:var(--dim);max-width:52ch}
+.about dl{display:grid;grid-template-columns:auto 1fr;gap:8px 20px;margin:0;font:400 12px var(--mono)}
+.about dt{color:var(--dim)}.about dd{margin:0}
+.foot{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:10vh;border-top:1px solid var(--line);padding-block:16px calc(28px + env(safe-area-inset-bottom,0px));font:400 11px var(--mono);color:var(--dim)}
+@media (max-width:760px){
+  .grid{grid-template-columns:1fr 1fr}
+  .vals span:nth-child(n+4){display:none}
+  .scale,.cam{display:none}
+  .scard img{filter:none;transform:none}
+  .about{grid-template-columns:1fr}
+  .ctrl{max-width:100%;top:auto;bottom:calc(64px + env(safe-area-inset-bottom,0px))}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<section class="stage" id="stage" tabindex="0" aria-label="Wizjer aparatu. Kliknij lub naciśnij spację, aby przejść do następnego zdjęcia. Strzałki zmieniają zdjęcie.">
+  <img class="layer blur" id="imgB" alt="">
+  <img class="layer sharp" id="imgS" alt="">
+  <div class="thirds"></div><div class="frame"></div>
+  <div class="af" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+  <div class="osd top pad"><span class="lbl"><b>M</b><span>RAW · AF-C</span><span class="cam" id="cam"></span></span><span class="lbl"><span id="left">[ 000 ]</span><span class="bat"></span></span></div>
+  <div class="title pad"><h1 id="t"></h1><p id="p"></p></div>
+  <div class="ctrl"><button id="back" hidden>← Wybrane</button><button id="full" aria-pressed="false">Pełny kadr</button><button id="zoom">Powiększ</button><button id="snd" aria-pressed="false">Dźwięk: wył.</button></div>
+  <div class="hint" id="hint">Prowadź ostrość kursorem · kliknij, aby zrobić zdjęcie</div>
+  <div class="osd bot pad"><span class="vals" id="vals"></span><span class="scale" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="c"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+  <div class="flash" id="flash"></div>
+</section>
+
+<div class="pad">
+  <section class="sec" id="serie">
+    <div class="sec-h"><h2>Serie</h2><span>Najedź, aby wyostrzyć · kliknij, aby oglądać w wizjerze</span></div>
+    <div class="grid" id="grid"></div>
+  </section>
+  <section class="about" id="kontakt">
+    <h2 id="who"></h2>
+    <div><p id="aboutTxt"></p><dl id="contact"></dl></div>
+  </section>
+  <footer class="foot" id="foot"></footer>
+</div>
+
+<script type="module">
+import { loadPortfolio, openViewer, demoBanner, fatal, p2, esc, calm, nPhotos, nSeries, finePointer } from '../shared/portfolio.js';
+
+let pf;
+try { pf = await loadPortfolio(); } catch (e) { fatal(e); throw e; }
+const c = pf.config, $ = (id) => document.getElementById(id);
+document.title = `${c.name} · Portfolio`;
+const stage = $('stage'), imgB = $('imgB'), imgS = $('imgS');
+
+let set = pf.highlightPhotos, setName = 'Wybrane', idx = 0, shots = 0, sound = false, actx = null;
+let tx = 50, ty = 50, cx = 50, cy = 50, rad = 90, lockT = 0, mouseSeen = false;
+
+function show(i) {
+  idx = (i + set.length) % set.length;
+  const p = set[idx], s = pf.seriesOf(p);
+  imgS.src = pf.img(p, 2400); imgS.alt = p.title;
+  imgB.src = pf.img(p, 480);
+  $('t').textContent = setName === 'Wybrane' ? (s?.title || p.title) : p.title;
+  $('p').textContent = [s?.place, setName !== 'Wybrane' ? null : s?.category, `${setName} ${p2(idx + 1)} / ${p2(set.length)}`].filter(Boolean).join(' · ');
+  const e = p.exif || {};
+  $('vals').innerHTML = [e.shutter, e.aperture, e.iso, e.focal, e.lens].filter(Boolean).map((v) => `<span>${esc(v)}</span>`).join('') || '<span>brak EXIF</span>';
+  $('cam').textContent = e.camera || '';
+  $('left').textContent = `[ ${String(Math.max(0, pf.photos.length - shots)).padStart(3, '0')} ]`;
+  const n = set[(idx + 1) % set.length]; new Image().src = pf.img(n, 2400);
+}
+function loadSet(list, label) {
+  set = list; setName = label; $('back').hidden = label === 'Wybrane'; show(0);
+}
+function click() {
+  if (!sound) return;
+  try {
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    [0, 0.075].forEach((t0, k) => {
+      const len = 0.045, buf = actx.createBuffer(1, Math.floor(actx.sampleRate * len), actx.sampleRate), d = buf.getChannelData(0);
+      for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, k ? 6 : 3);
+      const src = actx.createBufferSource(); src.buffer = buf;
+      const g = actx.createGain(); g.gain.value = k ? 0.5 : 0.8;
+      const f = actx.createBiquadFilter(); f.type = 'highpass'; f.frequency.value = k ? 2400 : 1200;
+      src.connect(f).connect(g).connect(actx.destination); src.start(actx.currentTime + t0);
+    });
+  } catch { /* audio not available */ }
+}
+function shoot(dir = 1) {
+  const fl = $('flash'); fl.classList.remove('go'); void fl.offsetWidth; fl.classList.add('go');
+  click(); shots++;
+  setTimeout(() => show(idx + dir), 110);
+  $('hint').style.opacity = 0;
+}
+
+stage.addEventListener('pointermove', (e) => {
+  if (e.pointerType !== 'mouse') return;
+  mouseSeen = true;
+  const r = stage.getBoundingClientRect();
+  tx = ((e.clientX - r.left) / r.width) * 100; ty = ((e.clientY - r.top) / r.height) * 100;
+  stage.classList.remove('lock'); clearTimeout(lockT); lockT = setTimeout(() => stage.classList.add('lock'), 320);
+  $('hint').style.opacity = 0;
+});
+stage.addEventListener('click', (e) => { if (e.target.closest('.ctrl')) return; shoot(1); });
+stage.addEventListener('keydown', (e) => {
+  if (e.key === ' ' || e.key === 'Enter' || e.key === 'ArrowRight') { e.preventDefault(); shoot(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); shoot(-1); }
+});
+let sx = null;
+stage.addEventListener('touchstart', (e) => { sx = e.touches[0].clientX; }, { passive: true });
+stage.addEventListener('touchend', (e) => {
+  if (sx == null) return; const dx = e.changedTouches[0].clientX - sx; sx = null;
+  if (Math.abs(dx) > 40) { e.preventDefault(); shoot(dx < 0 ? 1 : -1); }
+});
+$('full').onclick = function () { const on = stage.classList.toggle('full'); this.setAttribute('aria-pressed', String(on)); };
+$('zoom').onclick = () => openViewer(pf, set, idx, { onClose: () => stage.focus({ preventScroll: true }) });
+$('snd').onclick = function () { sound = !sound; this.setAttribute('aria-pressed', String(sound)); this.textContent = `Dźwięk: ${sound ? 'wł.' : 'wył.'}`; if (sound) click(); };
+$('back').onclick = () => loadSet(pf.highlightPhotos, 'Wybrane');
+
+/* series grid */
+$('grid').innerHTML = pf.series.map((s) => {
+  const cov = pf.photo(s.cover);
+  return `<button class="scard" data-slug="${esc(s.slug)}"><div class="ph">${cov ? `<img src="${pf.img(cov, 1200)}" alt="${esc(s.title)}" loading="lazy">` : ''}</div>
+    <div class="cap"><b>${esc(s.title)}</b><span>${esc([s.place, `${s.count} zdj.`].filter(Boolean).join(' · '))}</span></div></button>`;
+}).join('');
+$('grid').addEventListener('click', (e) => {
+  const b = e.target.closest('.scard'); if (!b) return;
+  const s = pf.seriesBySlug(b.dataset.slug);
+  loadSet(s.photos.map(pf.photo), s.title);
+  stage.scrollIntoView({ behavior: calm ? 'auto' : 'smooth' });
+  stage.focus({ preventScroll: true });
+});
+
+/* about */
+const nm = c.name.split(' ');
+$('who').innerHTML = `${esc(nm[0])}<br><span>${esc(nm.slice(1).join(' ') || c.tagline)}</span>`;
+$('aboutTxt').textContent = c.about || c.tagline;
+$('contact').innerHTML = [['E-mail', c.email], ['Instagram', c.instagram], ['Baza', c.city], ['Sprzęt', c.gear]]
+  .filter(([, v]) => v).map(([k, v]) => `<dt>${k}</dt><dd>${k === 'E-mail' ? `<a href="mailto:${esc(v)}">${esc(v)}</a>` : esc(v)}</dd>`).join('');
+$('foot').innerHTML = `<span>© ${new Date().getFullYear()} ${esc(c.name)}</span><span>${nPhotos(pf.photos.length)} · ${nSeries(pf.series.length)}</span>`;
+
+if (!finePointer) $('hint').textContent = 'Stuknij, aby zrobić zdjęcie · przesuń palcem, aby zmienić kadr';
+show(0);
+
+/* focus follow loop */
+(function loop() {
+  if (!finePointer || !mouseSeen) { const t = performance.now() / 1000; tx = 50 + Math.sin(t * 0.5) * 22; ty = 48 + Math.sin(t * 0.37) * 14; }
+  const k = calm ? 1 : 0.12; cx += (tx - cx) * k; cy += (ty - cy) * k;
+  const target = stage.classList.contains('lock') ? Math.min(stage.clientWidth, stage.clientHeight) * 0.26 : 110;
+  rad += (target - rad) * 0.08;
+  document.documentElement.style.setProperty('--x', `${cx}%`);
+  document.documentElement.style.setProperty('--y', `${cy}%`);
+  document.documentElement.style.setProperty('--r', `${rad}px`);
+  requestAnimationFrame(loop);
+})();
+
+demoBanner(pf);
+</script>
+</body>
+</html>

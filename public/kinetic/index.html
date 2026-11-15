@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Portfolio · Kinetic</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Kinetic: light paper, one variable-width typeface that reacts to the cursor and to scroll speed. */
+:root{--bg:#ecebe6;--ink:#0d0d0d;--grey:#8b8a83;--red:#d6261c;--line:rgba(13,13,13,.14);
+  --sans:"Archivo","Arial Narrow",Arial,sans-serif;--mono:"JetBrains Mono",ui-monospace,Menlo,monospace;--out:cubic-bezier(.2,.7,.2,1);--pv-font:"Archivo",Arial,sans-serif;color-scheme:light}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);overflow-x:clip}
+img{display:block;max-width:100%}
+a{color:inherit}
+a:focus-visible,button:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+.pad{padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px))}
+.top{display:flex;justify-content:space-between;gap:16px;padding-block:calc(18px + env(safe-area-inset-top,0px)) 18px;font:500 12px var(--mono);text-transform:uppercase;letter-spacing:.04em}
+.top nav{display:flex;gap:20px}
+.top a{text-decoration:none}
+.top a:hover{color:var(--red)}
+.live::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--red);margin-right:8px;animation:pulse 1.6s infinite}
+@keyframes pulse{50%{opacity:.25}}
+.name{display:flex;justify-content:space-between;margin:0;font-weight:900;font-size:clamp(80px,21vw,380px);line-height:.78;letter-spacing:-.02em;padding-block:3vh 2vh;user-select:none;text-transform:uppercase}
+.name span{display:block;font-variation-settings:"wdth" 80;transition:font-variation-settings .5s var(--out)}
+.sub{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;font:500 12px var(--mono);text-transform:uppercase;border-top:2px solid var(--ink);padding-top:12px}
+.sub span:nth-child(2){text-align:center}.sub span:last-child{text-align:right}
+.mq{overflow:hidden;border-block:2px solid var(--ink);margin-top:7vh;white-space:nowrap}
+.mq-in{display:inline-flex;will-change:transform}
+.mq-in span{font-weight:800;font-size:clamp(36px,6vw,92px);text-transform:uppercase;padding:10px 0;font-variation-settings:"wdth" 70;letter-spacing:-.01em}
+.mq-in i{display:inline-block;width:.45em;height:.45em;background:var(--red);border-radius:50%;margin:0 .45em;vertical-align:middle;transform:translateY(-.06em)}
+.hz{position:relative}
+.hz-stick{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;display:grid;grid-template-rows:auto 1fr;padding-top:calc(3vh + env(safe-area-inset-top,0px))}
+.hz-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;font:500 12px var(--mono);text-transform:uppercase}
+.hz-head b{font:900 clamp(28px,4vw,56px) var(--sans);font-variation-settings:"wdth" 62;letter-spacing:-.01em}
+.track{display:flex;gap:2vw;align-items:center;will-change:transform;padding-left:max(18px,env(safe-area-inset-left,0px))}
+.card{flex:0 0 auto;display:grid;gap:10px;height:62vh;margin:0;cursor:zoom-in;background:none;border:0;padding:0;text-align:left;color:inherit;font:inherit}
+.card .ph{overflow:hidden;height:calc(62vh - 44px)}
+.card img{height:100%;width:auto;max-width:none;transition:transform 1s var(--out);background:#d8d7d1}
+.card:hover img{transform:scale(1.05)}
+.card .cap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:4px 16px;font:500 11px var(--mono);text-transform:uppercase;width:0;min-width:100%}
+.card .cap b{font:800 18px var(--sans);font-variation-settings:"wdth" 75;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card .cap span{color:var(--grey)}
+.hz-prog{position:absolute;left:max(18px,env(safe-area-inset-left,0px));right:max(18px,env(safe-area-inset-right,0px));bottom:calc(22px + env(safe-area-inset-bottom,0px));height:2px;background:var(--line)}
+.hz-prog i{position:absolute;inset:0;background:var(--ink);transform-origin:left;transform:scaleX(0)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:2px solid var(--ink);margin-top:10vh}
+.stats div{padding:20px 0 24px 18px;border-right:2px solid var(--ink)}
+.stats div:first-child{padding-left:0}.stats div:last-child{border-right:0}
+.stats b{display:block;font-weight:900;font-size:clamp(56px,9vw,150px);line-height:.85;font-variation-settings:"wdth" 62;font-variant-numeric:tabular-nums}
+.stats span{font:500 12px var(--mono);text-transform:uppercase}
+.sr-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px 24px;flex-wrap:wrap;margin-top:14vh;border-bottom:2px solid var(--ink);padding-bottom:12px}
+.sr-head h2{margin:0;font:900 clamp(28px,4vw,56px) var(--sans);font-variation-settings:"wdth" 62;text-transform:uppercase}
+.filters{display:flex;gap:18px;font:500 12px var(--mono);text-transform:uppercase}
+.filters button{font:inherit;background:none;border:0;padding:0;color:var(--grey);cursor:pointer}
+.filters button[aria-pressed="true"]{color:var(--ink)}
+.rows{list-style:none;margin:0;padding:0}
+.row{display:grid;grid-template-columns:52px minmax(0,1fr) auto;gap:18px;align-items:center;width:100%;padding:16px 0;border:0;border-bottom:2px solid var(--line);background:none;color:inherit;text-align:left;cursor:pointer;font:inherit;position:relative}
+.row .n{font:500 12px var(--mono)}
+.row .t{font-weight:900;font-size:clamp(30px,5vw,80px);line-height:.9;text-transform:uppercase;font-variation-settings:"wdth" 62;transition:font-variation-settings .6s var(--out),color .3s;letter-spacing:-.01em;min-width:0;overflow-wrap:anywhere}
+.row .m{font:500 11px var(--mono);text-transform:uppercase;text-align:right;display:grid;gap:4px;justify-items:end}
+.row .m b{font:800 26px var(--sans);font-variation-settings:"wdth" 70}
+.row .thumb{position:absolute;right:160px;top:50%;height:120%;aspect-ratio:3/2;transform:translateY(-50%) scale(.6);opacity:0;object-fit:cover;transition:all .5s var(--out);pointer-events:none}
+.row:hover .t{font-variation-settings:"wdth" 125;color:var(--red)}
+.row:hover .thumb{opacity:1;transform:translateY(-50%) scale(1)}
+li[hidden]{display:none}
+.cta{display:block;text-decoration:none;font-weight:900;font-size:clamp(70px,17vw,300px);line-height:.8;text-transform:uppercase;padding-block:14vh 4vh;font-variation-settings:"wdth" 62;transition:font-variation-settings .7s var(--out),color .3s;letter-spacing:-.02em}
+.cta:hover{font-variation-settings:"wdth" 125;color:var(--red)}
+.about{max-width:60ch;font-size:17px;line-height:1.55;margin:0 0 6vh}
+.foot{display:flex;justify-content:space-between;gap:12px 24px;flex-wrap:wrap;border-top:2px solid var(--ink);padding-block:14px calc(30px + env(safe-area-inset-bottom,0px));font:500 12px var(--mono);text-transform:uppercase}
+@media (max-width:760px){
+  .sub{grid-template-columns:1fr}.sub span{text-align:left!important}
+  .card{height:50vh}.card .ph{height:calc(50vh - 44px)}
+  .stats{grid-template-columns:1fr}.stats div{border-right:0;border-bottom:2px solid var(--ink);padding-left:0}
+  .row{grid-template-columns:30px minmax(0,1fr) auto;gap:10px}.row .thumb{display:none}
+  .top nav{gap:14px}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="pad">
+  <header class="top"><span class="live" id="year">Portfolio</span><nav><a href="#kadry">Kadry</a><a href="#serie">Serie</a><a href="#kontakt">Kontakt</a></nav></header>
+  <h1 class="name" id="name"></h1>
+  <div class="sub" id="sub"></div>
+</div>
+<div class="mq" aria-hidden="true"><div class="mq-in" id="mq"></div></div>
+<section class="hz" id="kadry" aria-label="Wybrane kadry">
+  <div class="hz-stick">
+    <div class="hz-head pad"><b>Wybrane kadry</b><span id="cnt"></span></div>
+    <div class="track" id="track"></div>
+    <div class="hz-prog"><i id="prog"></i></div>
+  </div>
+</section>
+<div class="pad">
+  <div class="stats" id="stats"></div>
+  <div class="sr-head" id="serie"><h2>Serie</h2><div class="filters" id="filters" role="group" aria-label="Filtr kategorii"></div></div>
+  <ul class="rows" id="rows"></ul>
+  <a class="cta" id="kontakt" href="#">Napisz →</a>
+  <p class="about" id="about"></p>
+  <footer class="foot" id="foot"></footer>
+</div>
+
+<script type="module">
+import { loadPortfolio, openViewer, demoBanner, fatal, p2, esc, calm, finePointer } from '../shared/portfolio.js';
+
+let pf;
+try { pf = await loadPortfolio(); } catch (e) { fatal(e); throw e; }
+const c = pf.config, H = pf.highlightPhotos, $ = (id) => document.getElementById(id);
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+document.title = `${c.name} · Portfolio`;
+$('year').textContent = `Portfolio ${new Date(pf.generated).getFullYear()}`;
+
+/* wordmark */
+const name = $('name');
+name.setAttribute('aria-label', c.name);
+name.innerHTML = [...c.wordmark].map((ch) => `<span aria-hidden="true">${ch === ' ' ? '&nbsp;' : esc(ch)}</span>`).join('');
+const letters = [...name.children];
+if (finePointer && !calm) {
+  name.addEventListener('pointermove', (e) => letters.forEach((l) => {
+    const r = l.getBoundingClientRect(), d = Math.abs(e.clientX - (r.left + r.width / 2)) / innerWidth;
+    l.style.fontVariationSettings = `"wdth" ${clamp(125 - d * 260, 62, 125)}`;
+  }));
+  name.addEventListener('pointerleave', () => letters.forEach((l) => { l.style.fontVariationSettings = ''; }));
+}
+const cats = pf.categories.map((x) => x.label.toLowerCase());
+$('sub').innerHTML = `<span>${esc(c.tagline)}</span><span>${esc(cats.join(' · ') || '')}</span><span>${esc([c.city, c.since && `od ${c.since}`].filter(Boolean).join(' · '))}</span>`;
+
+/* marquee */
+const mq = $('mq');
+const words = pf.series.map((s) => `<span>${esc(s.title)}</span><i></i>`).join('');
+mq.innerHTML = words.repeat(Math.max(2, Math.ceil(12 / Math.max(1, pf.series.length))) * 2);
+
+/* horizontal gallery */
+const hz = $('kadry'), track = $('track');
+hz.style.height = `${Math.max(220, H.length * 42 + 120)}vh`;
+track.innerHTML = H.map((p, i) => {
+  const s = pf.seriesOf(p);
+  return `<button class="card" data-i="${i}" aria-label="Otwórz zdjęcie ${esc(p.title)}"><div class="ph"><img src="${pf.img(p, 1200)}" alt="${esc(p.title)}" style="aspect-ratio:${pf.ratio(p)}" loading="${i < 4 ? 'eager' : 'lazy'}"></div>
+    <div class="cap"><b>${p2(i + 1)} ${esc(s?.title || p.title)}</b><span>${esc([s?.place, p.exifLine].filter(Boolean).join(' · '))}</span></div></button>`;
+}).join('');
+track.addEventListener('click', (e) => { const b = e.target.closest('.card'); if (b) openViewer(pf, H, +b.dataset.i); });
+
+/* stats */
+const maxFocal = Math.max(0, ...pf.photos.map((p) => p.exif?.focalNum || 0));
+const stats = [[pf.series.length, 'Serie'], [pf.photos.length, 'Zdjęcia w portfolio']];
+if (maxFocal) stats.push([maxFocal, 'mm najdłuższa ogniskowa']); else stats.push([pf.categories.length || 1, 'Kategorie']);
+$('stats').innerHTML = stats.map(([v, l]) => `<div><b data-to="${v}">0</b><span>${l}</span></div>`).join('');
+const cio = new IntersectionObserver((es) => es.forEach((e) => {
+  if (!e.isIntersecting) return;
+  const el = e.target, to = +el.dataset.to; cio.unobserve(el);
+  if (calm) { el.textContent = to.toLocaleString('pl-PL'); return; }
+  const t0 = performance.now();
+  (function f(t) { const k = clamp((t - t0) / 1400, 0, 1); el.textContent = Math.round(to * (1 - (1 - k) ** 3)).toLocaleString('pl-PL'); if (k < 1) requestAnimationFrame(f); })(t0);
+}), { threshold: .5 });
+document.querySelectorAll('[data-to]').forEach((el) => cio.observe(el));
+
+/* series rows */
+const rows = $('rows');
+rows.innerHTML = pf.series.map((s, i) => {
+  const cov = pf.photo(s.cover);
+  return `<li data-c="${esc(s.category)}"><button class="row" data-slug="${esc(s.slug)}"><span class="n">${p2(i + 1)}</span><span class="t">${esc(s.title)}</span>
+    <span class="m"><b>${s.count}</b>${esc([s.category, s.place, s.date && s.date.slice(0, 4)].filter(Boolean).join(' · '))}</span>
+    ${cov ? `<img class="thumb" src="${pf.img(cov, 480)}" alt="" loading="lazy">` : ''}</button></li>`;
+}).join('');
+rows.addEventListener('click', (e) => {
+  const b = e.target.closest('.row'); if (!b) return;
+  const s = pf.seriesBySlug(b.dataset.slug);
+  openViewer(pf, s.photos.map(pf.photo), 0);
+});
+if (pf.categories.length > 1) {
+  const f = $('filters');
+  f.innerHTML = `<button aria-pressed="true" data-f="">Wszystko</button>` + pf.categories.map((x) => `<button aria-pressed="false" data-f="${esc(x.label)}">${esc(x.label)}</button>`).join('');
+  f.addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b) return;
+    f.querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    rows.querySelectorAll('li').forEach((li) => { li.hidden = !!b.dataset.f && li.dataset.c !== b.dataset.f; });
+  });
+}
+
+/* contact */
+const cta = $('kontakt');
+if (c.email) cta.href = `mailto:${c.email}`; else cta.removeAttribute('href');
+$('about').textContent = c.about || '';
+$('foot').innerHTML = [c.email, c.instagram, c.gear, `© ${new Date().getFullYear()} ${c.name}`].filter(Boolean).map((x) => `<span>${esc(x)}</span>`).join('');
+
+/* scroll-driven motion */
+const prog = $('prog'), cnt = $('cnt');
+let mqX = 0, lastY = scrollY, vel = 0, skew = 0;
+(function tick() {
+  const y = scrollY, dv = y - lastY; lastY = y; vel += (dv - vel) * 0.15;
+  if (!calm) {
+    mqX -= (1.2 + Math.abs(vel) * 0.35) * (vel < -0.5 ? -1 : 1);
+    const half = mq.scrollWidth / 2;
+    if (half) { if (mqX < -half) mqX += half; if (mqX > 0) mqX -= half; }
+    mq.style.transform = `translateX(${mqX}px)`;
+  }
+  const r = hz.getBoundingClientRect(), total = hz.offsetHeight - innerHeight;
+  const pr = clamp(-r.top / Math.max(1, total), 0, 1);
+  const dist = Math.max(0, track.scrollWidth - innerWidth + 40);
+  skew += ((calm ? 0 : clamp(vel * 0.05, -6, 6)) - skew) * 0.1;
+  track.style.transform = `translateX(${-pr * dist}px) skewX(${skew}deg)`;
+  prog.style.transform = `scaleX(${pr})`;
+  cnt.textContent = `${p2(Math.min(H.length, Math.floor(pr * H.length) + 1))} / ${p2(H.length)}`;
+  requestAnimationFrame(tick);
+})();
+
+demoBanner(pf);
+</script>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Portfolio · Flythrough</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@1,9..144,300;1,9..144,400&family=Sora:wght@300;400;500&display=swap">
+<style>
+/* Flythrough: scrolling is a flight through photos floating in 3D, from the ground to cruising altitude. */
+:root{--ink:#eef2f7;--dim:rgba(238,242,247,.55);--line:rgba(238,242,247,.18);--night:#060b18;
+  --sans:"Sora",system-ui,sans-serif;--serif:"Fraunces",Georgia,serif;--mono:"JetBrains Mono",ui-monospace,Menlo,monospace;--out:cubic-bezier(.2,.7,.2,1);--pv-font:"Sora",system-ui,sans-serif;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--night);color:var(--ink);font-family:var(--sans);font-weight:300}
+img{display:block;max-width:100%}
+a{color:inherit}
+button:focus-visible,a:focus-visible{outline:2px solid #8fb4ff;outline-offset:3px}
+.pad{padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px))}
+.hdr{position:fixed;inset:0 0 auto;z-index:20;display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding-block:calc(18px + env(safe-area-inset-top,0px)) 18px;font:400 12px var(--mono);letter-spacing:.12em;text-transform:uppercase;pointer-events:none}
+.hdr a{pointer-events:auto;text-decoration:none;opacity:.85}
+.hdr a:hover{opacity:1}
+.hdr nav{display:flex;gap:20px}
+.fly{position:relative}
+.view{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;perspective:900px;background:linear-gradient(180deg,#060b18,#2a3f66)}
+.stars{position:absolute;inset:0;opacity:.6;background-image:radial-gradient(1px 1px at 12% 18%,#fff,transparent),radial-gradient(1px 1px at 72% 12%,#fff,transparent),radial-gradient(1.5px 1.5px at 40% 30%,#fff,transparent),radial-gradient(1px 1px at 86% 40%,#fff,transparent),radial-gradient(1px 1px at 22% 52%,#fff,transparent),radial-gradient(1px 1px at 58% 8%,#fff,transparent),radial-gradient(1px 1px at 94% 22%,#fff,transparent),radial-gradient(1px 1px at 6% 36%,#fff,transparent),radial-gradient(1px 1px at 33% 9%,#fff,transparent),radial-gradient(1px 1px at 66% 44%,#fff,transparent)}
+.world{position:absolute;left:50%;top:50%;transform-style:preserve-3d;will-change:transform}
+.card{position:absolute;left:0;top:0;width:min(34vw,540px);transform-style:preserve-3d;cursor:zoom-in;border:0;padding:0;background:none;color:inherit;text-align:left;font:inherit}
+.card img{width:100%;object-fit:cover;box-shadow:0 30px 60px -20px rgba(0,0,0,.7);background:#1a2540}
+.card span{display:flex;justify-content:space-between;gap:12px;font:400 11px var(--mono);letter-spacing:.06em;padding-top:10px;color:var(--dim)}
+.card span b{font:400 15px var(--sans);color:var(--ink);letter-spacing:0}
+.intro{position:absolute;inset:0;display:grid;place-items:center;text-align:center;pointer-events:none;padding:0 20px}
+.intro h1{margin:0;font:300 italic clamp(44px,8vw,124px)/.95 var(--serif);letter-spacing:-.02em;text-wrap:balance}
+.intro p{margin:18px 0 0;font:400 12px var(--mono);letter-spacing:.14em;color:var(--dim);text-transform:uppercase}
+.hud{position:absolute;inset:0;pointer-events:none;font:400 11px var(--mono);letter-spacing:.1em;color:var(--dim);text-transform:uppercase}
+.alt{position:absolute;left:max(18px,env(safe-area-inset-left,0px));top:50%;transform:translateY(-50%);display:grid;gap:8px}
+.alt b,.kad b{display:block;font:300 34px var(--sans);color:var(--ink);letter-spacing:-.02em;font-variant-numeric:tabular-nums;text-transform:none}
+.alt i{display:block;width:120px;height:1px;background:var(--line);position:relative}
+.alt i::after{content:"";position:absolute;left:0;top:-1px;height:3px;width:var(--p,0%);background:var(--ink)}
+.kad{position:absolute;right:max(18px,env(safe-area-inset-right,0px));top:50%;transform:translateY(-50%);text-align:right}
+.hint{position:absolute;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);transition:opacity .4s;white-space:nowrap}
+.land{background:linear-gradient(180deg,#2a3f66,#0d1424 50%,#060b18);padding-block:16vh calc(40px + env(safe-area-inset-bottom,0px))}
+.land h2{margin:0 0 4vh;font:300 italic clamp(48px,8vw,124px)/.95 var(--serif);letter-spacing:-.02em}
+.land .grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:48px;align-items:start}
+.land p{margin:0 0 28px;max-width:52ch;line-height:1.65;color:var(--dim)}
+.land dl{display:grid;grid-template-columns:auto 1fr;gap:8px 24px;margin:0;font:400 13px var(--mono)}
+.land dt{color:var(--dim)}.land dd{margin:0}
+.land h3{margin:0 0 12px;font:400 11px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+.slist{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.slist button{width:100%;display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:16px;align-items:center;padding:12px 0;border:0;border-bottom:1px solid var(--line);background:none;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.slist img{width:64px;aspect-ratio:3/2;object-fit:cover;opacity:.75;transition:opacity .3s}
+.slist b{font:400 17px var(--sans);display:block}
+.slist small{font:400 11px var(--mono);color:var(--dim)}
+.slist .c{font:400 12px var(--mono);color:var(--dim)}
+.slist button:hover img{opacity:1}
+.foot{margin-top:12vh;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font:400 11px var(--mono);color:var(--dim);border-top:1px solid var(--line);padding-top:16px}
+@media (max-width:760px){
+  .card{width:64vw}
+  .alt b,.kad b{font-size:22px}.alt i{width:70px}
+  .land .grid{grid-template-columns:1fr}
+  .hdr nav{gap:14px}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="hdr pad"><a href="#top" id="brand"></a><nav><a href="#ladowanie">Serie</a><a href="#kontakt">Kontakt</a></nav></header>
+<section class="fly" id="top">
+  <div class="view" id="view">
+    <div class="stars"></div>
+    <div class="world" id="world"></div>
+    <div class="intro" id="intro"><div><h1 id="headline"></h1><p id="byline"></p></div></div>
+    <div class="hud" aria-hidden="true">
+      <div class="alt">Wysokość<b id="fl">FL 000</b><i id="bar"></i></div>
+      <div class="kad">Kadr<b id="n">00 / 00</b></div>
+      <div class="hint" id="hint">Przewiń, aby wystartować ↓</div>
+    </div>
+  </div>
+</section>
+<section class="land pad" id="ladowanie">
+  <h2>Lądowanie.</h2>
+  <div class="grid">
+    <div id="kontakt"><p id="about"></p><dl id="contact"></dl></div>
+    <div><h3>Serie</h3><ul class="slist" id="slist"></ul></div>
+  </div>
+  <div class="foot" id="foot"></div>
+</section>
+
+<script type="module">
+import { loadPortfolio, openViewer, demoBanner, fatal, p2, esc, calm, nPhotos, nSeries } from '../shared/portfolio.js';
+
+let pf;
+try { pf = await loadPortfolio(); } catch (e) { fatal(e); throw e; }
+const c = pf.config, H = pf.highlightPhotos, $ = (id) => document.getElementById(id);
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+document.title = `${c.name} · Portfolio`;
+$('brand').textContent = c.name;
+$('headline').innerHTML = esc(c.flyHeadline).replace(/,\s*/, ',<br>').replace(/ i /, '<br>i ');
+$('byline').textContent = [c.name, c.tagline].filter(Boolean).join(' · ');
+
+/* 3D world */
+const narrow = innerWidth < 760, GAP = 900, START = 700;
+const pos = H.map((p, i) => ({ x: (i % 2 ? 1 : -1) * (14 + ((i * 37) % 14)) * (narrow ? 0.45 : 1), y: ((i * 53) % 30) - 15, z: -(START + i * GAP) }));
+const world = $('world'), fly = $('top');
+fly.style.height = `${Math.max(300, H.length * 75 + 150)}vh`;
+world.innerHTML = H.map((p, i) => {
+  const s = pf.seriesOf(p);
+  return `<button class="card" data-i="${i}" aria-label="Otwórz zdjęcie ${esc(p.title)}"><img src="${pf.img(p, 1200)}" alt="${esc(p.title)}" style="aspect-ratio:${pf.ratio(p)}" loading="${i < 3 ? 'eager' : 'lazy'}"><span><b>${esc(s?.title || p.title)}</b>${esc(s?.place || '')}</span></button>`;
+}).join('');
+const cards = [...world.children];
+if (narrow) cards.forEach((el, i) => { if (pf.ratio(H[i]) < 1) el.style.width = '44vw'; });
+else cards.forEach((el, i) => { if (pf.ratio(H[i]) < 1) el.style.width = 'min(22vw,360px)'; });
+const DEPTH = START + Math.max(0, H.length - 1) * GAP + 600;
+world.addEventListener('click', (e) => { const b = e.target.closest('.card'); if (b) openViewer(pf, H, +b.dataset.i); });
+
+/* landing */
+$('about').textContent = c.about || '';
+$('contact').innerHTML = [['E-mail', c.email], ['Instagram', c.instagram], ['Baza', c.city], ['Sprzęt', c.gear]]
+  .filter(([, v]) => v).map(([k, v]) => `<dt>${k}</dt><dd>${k === 'E-mail' ? `<a href="mailto:${esc(v)}">${esc(v)}</a>` : esc(v)}</dd>`).join('');
+$('slist').innerHTML = pf.series.map((s) => {
+  const cov = pf.photo(s.cover);
+  return `<li><button data-slug="${esc(s.slug)}">${cov ? `<img src="${pf.img(cov, 480)}" alt="" loading="lazy">` : '<span></span>'}<span><b>${esc(s.title)}</b><small>${esc([s.category, s.place, s.date && s.date.slice(0, 4)].filter(Boolean).join(' · '))}</small></span><span class="c">${s.count} zdj.</span></button></li>`;
+}).join('');
+$('slist').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; const s = pf.seriesBySlug(b.dataset.slug); openViewer(pf, s.photos.map(pf.photo), 0); });
+$('foot').innerHTML = `<span>© ${new Date().getFullYear()} ${esc(c.name)}</span><span>${nPhotos(pf.photos.length)} · ${nSeries(pf.series.length)}</span>`;
+
+/* flight loop */
+const intro = $('intro'), fl = $('fl'), bar = $('bar'), nEl = $('n'), hint = $('hint'), view = $('view');
+let camZ = 0;
+(function tick() {
+  const r = fly.getBoundingClientRect(), total = fly.offsetHeight - innerHeight, pr = clamp(-r.top / Math.max(1, total), 0, 1);
+  const target = pr * DEPTH; camZ += calm ? target - camZ : (target - camZ) * 0.12;
+  world.style.transform = `translate3d(0,0,${camZ}px)`;
+  let near = 0;
+  cards.forEach((el, i) => {
+    const p = pos[i], d = p.z + camZ;
+    const o = (d > 100 ? clamp(1 - (d - 100) / 400, 0, 1) : clamp((d + 4200) / 2400, 0, 1)) * clamp(pr * 14 - 0.15, 0, 1);
+    el.style.opacity = o;
+    el.style.visibility = d > 520 || o < 0.01 ? 'hidden' : 'visible';
+    el.style.transform = `translate(-50%,-50%) translate3d(${p.x}vw,${p.y}vh,${p.z}px)`;
+    if (d > -1400) near = i + 1;
+  });
+  intro.style.opacity = clamp(1 - pr * 9, 0, 1);
+  intro.style.transform = `scale(${1 + pr * 3})`;
+  hint.style.opacity = pr > 0.02 ? 0 : 1;
+  fl.textContent = `FL ${String(Math.round(pr * 390)).padStart(3, '0')}`;
+  bar.style.setProperty('--p', `${pr * 100}%`);
+  nEl.textContent = `${p2(Math.min(near, H.length))} / ${p2(H.length)}`;
+  const top = [6, 11, 24], bot = [42, 63, 102], t2 = [2, 4, 10], b2 = [16, 28, 58];
+  view.style.background = `linear-gradient(180deg,rgb(${top.map((v, j) => Math.round(v + (t2[j] - v) * pr))}),rgb(${bot.map((v, j) => Math.round(v + (b2[j] - v) * pr))}))`;
+  requestAnimationFrame(tick);
+})();
+
+demoBanner(pf);
+</script>
+</body>
+</html>

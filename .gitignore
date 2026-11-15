@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.cache/
+.DS_Store
+# Your own photos stay on your disk / NAS, not in git
+photos/*
+!photos/README.md
+!photos/przyklad-seria.json
