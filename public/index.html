@@ -14,6 +14,8 @@
 body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.55 var(--sans)}
 .wrap{max-width:1180px;margin:0 auto;padding:calc(40px + env(safe-area-inset-top,0px)) max(18px,env(safe-area-inset-right,0px)) 60px max(18px,env(safe-area-inset-left,0px));display:grid;gap:28px}
 h1{margin:0;font-size:clamp(28px,4vw,42px);letter-spacing:-.02em;line-height:1.1}
+.hrow{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap}
+.hrow .lang-switch{font:13px var(--mono)}
 .lead{margin:6px 0 0;color:var(--mut);max-width:70ch}
 .status{display:flex;gap:10px 20px;flex-wrap:wrap;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 18px;font-size:14px}
 .status b{font-weight:600}
@@ -41,42 +43,46 @@ h1{margin:0;font-size:clamp(28px,4vw,42px);letter-spacing:-.02em;line-height:1.1
 <body>
 <div class="wrap">
   <header>
-    <h1 id="h">Portfolio</h1>
-    <p class="lead">Trzy wersje tej samej strony, zasilane tymi samymi zdjęciami. Wybierz wersję, żeby zobaczyć ją na swoich kadrach.</p>
+    <div class="hrow"><h1 id="h">Portfolio</h1><span class="lang-switch"></span></div>
+    <p class="lead" data-i18n="home.lead">Trzy wersje tej samej strony, zasilane tymi samymi zdjęciami. Wybierz wersję, żeby zobaczyć ją na swoich kadrach.</p>
   </header>
-  <div class="status" id="status"><span class="dot"></span><span>Wczytuję dane…</span></div>
+  <div class="status" id="status"><span class="dot"></span><span data-i18n="home.loading">Wczytuję dane…</span></div>
   <div class="cards">
-    <a class="card" href="kinetic/"><div class="im"><img id="i0" alt=""><span>A</span></div><div class="tx"><h2>Kinetic</h2><p>Odważna typografia, która rozciąga się pod kursorem, i galeria jadąca w poziomie.</p><span class="go">Otwórz →</span></div></a>
-    <a class="card" href="flythrough/"><div class="im"><img id="i1" alt=""><span>B</span></div><div class="tx"><h2>Flythrough</h2><p>Przewijanie to lot przez zdjęcia zawieszone w przestrzeni 3D.</p><span class="go">Otwórz →</span></div></a>
-    <a class="card" href="focus/"><div class="im"><img id="i2" alt=""><span>C</span></div><div class="tx"><h2>Focus</h2><p>Strona działa jak aparat: ostrość podąża za kursorem, kliknięcie robi zdjęcie.</p><span class="go">Otwórz →</span></div></a>
+    <a class="card" href="kinetic/"><div class="im"><img id="i0" alt=""><span>A</span></div><div class="tx"><h2>Kinetic</h2><p data-i18n="home.kinetic">Odważna typografia, która rozciąga się pod kursorem, i galeria jadąca w poziomie.</p><span class="go" data-i18n="home.open">Otwórz →</span></div></a>
+    <a class="card" href="flythrough/"><div class="im"><img id="i1" alt=""><span>B</span></div><div class="tx"><h2>Flythrough</h2><p data-i18n="home.fly">Przewijanie to lot przez zdjęcia zawieszone w przestrzeni 3D.</p><span class="go" data-i18n="home.open">Otwórz →</span></div></a>
+    <a class="card" href="focus/"><div class="im"><img id="i2" alt=""><span>C</span></div><div class="tx"><h2>Focus</h2><p data-i18n="home.focus">Strona działa jak aparat: ostrość podąża za kursorem, kliknięcie robi zdjęcie.</p><span class="go" data-i18n="home.open">Otwórz →</span></div></a>
   </div>
   <section class="how">
-    <div><h3>1. Ułóż zdjęcia w folderach</h3><p>Kategoria, potem seria. Nazwa folderu serii staje się jej tytułem.</p>
+    <div><h3 data-i18n="home.h1">1. Ułóż zdjęcia w folderach</h3><p data-i18n="home.p1">Kategoria, potem seria. Nazwa folderu serii staje się jej tytułem.</p>
 <pre>photos/
   lotnictwo/
-    radom-air-show-2026/
+    Radom Air Show 2026/
       DSC01234.jpg
   motoryzacja/
-    track-day-poznan/</pre></div>
-    <div><h3>2. Albo wskaż folder na NAS</h3><p>W pliku <code>portfolio.config.json</code> ustaw <code>photosDir</code> na zamontowany udział, np.:</p>
+    Track day Tor Poznań/</pre></div>
+    <div><h3 data-i18n="home.h2">2. Albo wskaż folder na NAS</h3><p data-i18n-html="home.p2">W pliku <code>portfolio.config.json</code> ustaw <code>photosDir</code> na zamontowany udział, np.:</p>
 <pre>"photosDir": "/Volumes/Portfolio"      (Mac)
 "photosDir": "/mnt/nas/portfolio"      (Ubuntu)</pre></div>
-    <div><h3>3. Odśwież stronę</h3><p>Serwer sam czyta nowe zdjęcia, ich dane EXIF i robi zmniejszone wersje. Szczegóły są w pliku README.md.</p></div>
+    <div><h3 data-i18n="home.h3">3. Odśwież stronę</h3><p data-i18n="home.p3">Serwer sam czyta nowe zdjęcia, ich dane EXIF i robi zmniejszone wersje. Szczegóły są w pliku README.md.</p></div>
   </section>
 </div>
 <script type="module">
-import { loadPortfolio, esc, nPhotos, nSeries } from './shared/portfolio.js';
+import { loadPortfolio, esc, nPhotos, nSeries, t } from './shared/portfolio.js';
 const st = document.getElementById('status');
+document.title = t('home.title');
+// keep the chosen language when opening a version
+document.querySelectorAll('.card').forEach((a) => { a.href = a.getAttribute('href') + location.search; });
 try {
   const pf = await loadPortfolio();
   document.getElementById('h').textContent = `Portfolio · ${pf.config.name}`;
   const pics = pf.highlightPhotos;
   ['i0', 'i1', 'i2'].forEach((id, k) => { const p = pics[k % pics.length]; if (p) document.getElementById(id).src = pf.img(p, 1200); });
+  const dir = pf.photosDir ? esc(pf.photosDir) : '';
   if (pf.demo) {
     st.classList.add('demo');
-    st.innerHTML = `<span class="dot"></span><span><b>Brak zdjęć</b>${pf.photosDir ? ` w folderze <code>${esc(pf.photosDir)}</code>` : ''}. Strony pokazują przykładowe grafiki.</span>`;
+    st.innerHTML = `<span class="dot"></span><span>${t('home.none')}${dir ? t('home.inDir', { dir }) : ''}${t('home.demo')}</span>`;
   } else {
-    st.innerHTML = `<span class="dot"></span><span><b>${nPhotos(pf.photos.length)}</b> (${nSeries(pf.series.length)})${pf.photosDir ? ` z folderu <code>${esc(pf.photosDir)}</code>` : ''}${pf.resize ? '' : ' (bez zmniejszania: brak biblioteki sharp)'}</span>`;
+    st.innerHTML = `<span class="dot"></span><span>${t('home.found', { photos: nPhotos(pf.photos.length), series: nSeries(pf.series.length) })}${dir ? t('home.fromDir', { dir }) : ''}${pf.resize ? '' : t('home.noSharp')}</span>`;
   }
 } catch (e) {
   st.classList.add('demo');

@@ -81,36 +81,36 @@ li[hidden]{display:none}
 </head>
 <body>
 <div class="pad">
-  <header class="top"><span class="live" id="year">Portfolio</span><nav><a href="#kadry">Kadry</a><a href="#serie">Serie</a><a href="#kontakt">Kontakt</a></nav></header>
+  <header class="top"><span class="live" id="year">Portfolio</span><nav><a href="#kadry" data-i18n="nav.shots">Kadry</a><a href="#serie" data-i18n="nav.series">Serie</a><a href="#kontakt" data-i18n="nav.contact">Kontakt</a><span class="lang-switch"></span></nav></header>
   <h1 class="name" id="name"></h1>
   <div class="sub" id="sub"></div>
 </div>
 <div class="mq" aria-hidden="true"><div class="mq-in" id="mq"></div></div>
-<section class="hz" id="kadry" aria-label="Wybrane kadry">
+<section class="hz" id="kadry" aria-label="Wybrane kadry" data-i18n-aria="k.gallery">
   <div class="hz-stick">
-    <div class="hz-head pad"><b>Wybrane kadry</b><span id="cnt"></span></div>
+    <div class="hz-head pad"><b data-i18n="k.selected">Wybrane kadry</b><span id="cnt"></span></div>
     <div class="track" id="track"></div>
     <div class="hz-prog"><i id="prog"></i></div>
   </div>
 </section>
 <div class="pad">
   <div class="stats" id="stats"></div>
-  <div class="sr-head" id="serie"><h2>Serie</h2><div class="filters" id="filters" role="group" aria-label="Filtr kategorii"></div></div>
+  <div class="sr-head" id="serie"><h2 data-i18n="nav.series">Serie</h2><div class="filters" id="filters" role="group" aria-label="Filtr kategorii" data-i18n-aria="filter.cat"></div></div>
   <ul class="rows" id="rows"></ul>
-  <a class="cta" id="kontakt" href="#">Napisz →</a>
+  <a class="cta" id="kontakt" href="#" data-i18n="k.write">Napisz →</a>
   <p class="about" id="about"></p>
   <footer class="foot" id="foot"></footer>
 </div>
 
 <script type="module">
-import { loadPortfolio, openViewer, demoBanner, fatal, p2, esc, calm, finePointer } from '../shared/portfolio.js';
+import { loadPortfolio, openViewer, demoBanner, fatal, p2, esc, calm, finePointer, t } from '../shared/portfolio.js';
 
 let pf;
 try { pf = await loadPortfolio(); } catch (e) { fatal(e); throw e; }
 const c = pf.config, H = pf.highlightPhotos, $ = (id) => document.getElementById(id);
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 document.title = `${c.name} · Portfolio`;
-$('year').textContent = `Portfolio ${new Date(pf.generated).getFullYear()}`;
+$('year').textContent = t('portfolio.year', { y: new Date(pf.generated).getFullYear() });
 
 /* wordmark */
 const name = $('name');
@@ -125,7 +125,7 @@ if (finePointer && !calm) {
   name.addEventListener('pointerleave', () => letters.forEach((l) => { l.style.fontVariationSettings = ''; }));
 }
 const cats = pf.categories.map((x) => x.label.toLowerCase());
-$('sub').innerHTML = `<span>${esc(c.tagline)}</span><span>${esc(cats.join(' · ') || '')}</span><span>${esc([c.city, c.since && `od ${c.since}`].filter(Boolean).join(' · '))}</span>`;
+$('sub').innerHTML = `<span>${esc(c.tagline)}</span><span>${esc(cats.join(' · ') || '')}</span><span>${esc([c.city, c.since && t('since', { y: c.since })].filter(Boolean).join(' · '))}</span>`;
 
 /* marquee */
 const mq = $('mq');
@@ -137,15 +137,15 @@ const hz = $('kadry'), track = $('track');
 hz.style.height = `${Math.max(220, H.length * 42 + 120)}vh`;
 track.innerHTML = H.map((p, i) => {
   const s = pf.seriesOf(p);
-  return `<button class="card" data-i="${i}" aria-label="Otwórz zdjęcie ${esc(p.title)}"><div class="ph"><img src="${pf.img(p, 1200)}" alt="${esc(p.title)}" style="aspect-ratio:${pf.ratio(p)}" loading="${i < 4 ? 'eager' : 'lazy'}"></div>
+  return `<button class="card" data-i="${i}" aria-label="${esc(t('open.photo', { t: p.title }))}"><div class="ph"><img src="${pf.img(p, 1200)}" alt="${esc(p.title)}" style="aspect-ratio:${pf.ratio(p)}" loading="${i < 4 ? 'eager' : 'lazy'}"></div>
     <div class="cap"><b>${p2(i + 1)} ${esc(s?.title || p.title)}</b><span>${esc([s?.place, p.exifLine].filter(Boolean).join(' · '))}</span></div></button>`;
 }).join('');
 track.addEventListener('click', (e) => { const b = e.target.closest('.card'); if (b) openViewer(pf, H, +b.dataset.i); });
 
 /* stats */
 const maxFocal = Math.max(0, ...pf.photos.map((p) => p.exif?.focalNum || 0));
-const stats = [[pf.series.length, 'Serie'], [pf.photos.length, 'Zdjęcia w portfolio']];
-if (maxFocal) stats.push([maxFocal, 'mm najdłuższa ogniskowa']); else stats.push([pf.categories.length || 1, 'Kategorie']);
+const stats = [[pf.series.length, t('k.statSeries')], [pf.photos.length, t('k.statPhotos')]];
+if (maxFocal) stats.push([maxFocal, t('k.statFocal')]); else stats.push([pf.categories.length || 1, t('k.statCats')]);
 $('stats').innerHTML = stats.map(([v, l]) => `<div><b data-to="${v}">0</b><span>${l}</span></div>`).join('');
 const cio = new IntersectionObserver((es) => es.forEach((e) => {
   if (!e.isIntersecting) return;
@@ -171,7 +171,7 @@ rows.addEventListener('click', (e) => {
 });
 if (pf.categories.length > 1) {
   const f = $('filters');
-  f.innerHTML = `<button aria-pressed="true" data-f="">Wszystko</button>` + pf.categories.map((x) => `<button aria-pressed="false" data-f="${esc(x.label)}">${esc(x.label)}</button>`).join('');
+  f.innerHTML = `<button aria-pressed="true" data-f="">${t('all')}</button>` + pf.categories.map((x) => `<button aria-pressed="false" data-f="${esc(x.label)}">${esc(x.label)}</button>`).join('');
   f.addEventListener('click', (e) => {
     const b = e.target.closest('button'); if (!b) return;
     f.querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));

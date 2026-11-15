@@ -1,14 +1,17 @@
 {
   "name": "Adam Nowak",
   "wordmark": "NOWAK",
-  "tagline": "Fotografia lotnicza i motoryzacyjna",
-  "city": "Warszawa",
+  "tagline": { "pl": "Fotografia lotnicza i motoryzacyjna", "en": "Aviation and automotive photography" },
+  "city": { "pl": "Warszawa", "en": "Warsaw" },
   "since": 2022,
-  "about": "Studiuję w Warszawie i fotografuję samoloty oraz samochody. Najwięcej czasu spędzam przy płotach lotnisk i na torach. Szukam momentu, w którym maszyna i światło spotykają się na ułamek sekundy.",
+  "about": {
+    "pl": "Studiuję w Warszawie i fotografuję samoloty oraz samochody. Najwięcej czasu spędzam przy płotach lotnisk i na torach. Szukam momentu, w którym maszyna i światło spotykają się na ułamek sekundy.",
+    "en": "I'm a student in Warsaw who photographs aircraft and cars. Most of my time is spent at airport fences and race tracks, looking for the split second when machine and light meet."
+  },
   "email": "kontakt@twojadomena.pl",
   "instagram": "@twoj.profil",
   "gear": "Sony α7 IV · 24–70 mm · 200–600 mm",
-  "flyHeadline": "Wszystko, co lata i jedzie.",
+  "flyHeadline": { "pl": "Wszystko, co lata i jedzie.", "en": "Everything that flies and drives." },
 
   "photosDir": "./photos",
   "port": 4321,

@@ -1,8 +1,11 @@
 {
-  "title": "Radom Air Show 2026",
-  "place": "Radom-Sadków, EPRA",
+  "title": { "pl": "Radom Air Show 2026", "en": "Radom Air Show 2026" },
+  "place": { "pl": "Radom-Sadków, EPRA", "en": "Radom-Sadków airfield, EPRA" },
   "date": "2026-08-23",
-  "description": "Dwa dni pokazów i jedno okno światła po 18:30.",
+  "description": {
+    "pl": "Dwa dni pokazów i jedno okno światła po 18:30.",
+    "en": "Two days of flying displays and one window of light after 6:30 pm."
+  },
   "cover": "DSC01240.jpg",
   "highlights": ["DSC01240.jpg", "DSC01234.jpg", "DSC01251.jpg"],
   "order": 1

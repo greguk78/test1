@@ -52,6 +52,7 @@ button:focus-visible,a:focus-visible,[tabindex]:focus-visible{outline:2px solid 
 .ctrl button{font:400 11px var(--mono);color:var(--ink);background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.3);border-radius:99px;padding:6px 12px;cursor:pointer;backdrop-filter:blur(6px)}
 .ctrl button:hover{border-color:#fff}
 .ctrl button[hidden]{display:none}
+.ctrl .lang-switch{gap:4px}.ctrl .lang-switch span{display:none}
 .hint{position:absolute;left:50%;top:50%;transform:translate(-50%,64px);font:400 11px var(--mono);letter-spacing:.12em;text-transform:uppercase;pointer-events:none;transition:opacity .5s;text-align:center;padding:0 20px;text-shadow:0 1px 8px rgba(0,0,0,.7)}
 .flash{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none}
 .flash.go{animation:blink .32s ease-out}
@@ -85,22 +86,22 @@ button:focus-visible,a:focus-visible,[tabindex]:focus-visible{outline:2px solid 
 </style>
 </head>
 <body>
-<section class="stage" id="stage" tabindex="0" aria-label="Wizjer aparatu. Kliknij lub naciśnij spację, aby przejść do następnego zdjęcia. Strzałki zmieniają zdjęcie.">
+<section class="stage" id="stage" tabindex="0" aria-label="Wizjer aparatu. Kliknij lub naciśnij spację, aby przejść do następnego zdjęcia. Strzałki zmieniają zdjęcie." data-i18n-aria="v.stage">
   <img class="layer blur" id="imgB" alt="">
   <img class="layer sharp" id="imgS" alt="">
   <div class="thirds"></div><div class="frame"></div>
   <div class="af" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
   <div class="osd top pad"><span class="lbl"><b>M</b><span>RAW · AF-C</span><span class="cam" id="cam"></span></span><span class="lbl"><span id="left">[ 000 ]</span><span class="bat"></span></span></div>
   <div class="title pad"><h1 id="t"></h1><p id="p"></p></div>
-  <div class="ctrl"><button id="back" hidden>← Wybrane</button><button id="full" aria-pressed="false">Pełny kadr</button><button id="zoom">Powiększ</button><button id="snd" aria-pressed="false">Dźwięk: wył.</button></div>
-  <div class="hint" id="hint">Prowadź ostrość kursorem · kliknij, aby zrobić zdjęcie</div>
+  <div class="ctrl"><button id="back" hidden data-i18n="v.back">← Wybrane</button><button id="full" aria-pressed="false" data-i18n="v.full">Pełny kadr</button><button id="zoom" data-i18n="v.zoom">Powiększ</button><button id="snd" aria-pressed="false" data-i18n="v.soundOff">Dźwięk: wył.</button><span class="lang-switch"></span></div>
+  <div class="hint" id="hint" data-i18n="v.hintMouse">Prowadź ostrość kursorem · kliknij, aby zrobić zdjęcie</div>
   <div class="osd bot pad"><span class="vals" id="vals"></span><span class="scale" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="c"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
   <div class="flash" id="flash"></div>
 </section>
 
 <div class="pad">
   <section class="sec" id="serie">
-    <div class="sec-h"><h2>Serie</h2><span>Najedź, aby wyostrzyć · kliknij, aby oglądać w wizjerze</span></div>
+    <div class="sec-h"><h2 data-i18n="nav.series">Serie</h2><span data-i18n="v.seriesHint">Najedź, aby wyostrzyć · kliknij, aby oglądać w wizjerze</span></div>
     <div class="grid" id="grid"></div>
   </section>
   <section class="about" id="kontakt">
@@ -111,7 +112,7 @@ button:focus-visible,a:focus-visible,[tabindex]:focus-visible{outline:2px solid 
 </div>
 
 <script type="module">
-import { loadPortfolio, openViewer, demoBanner, fatal, p2, esc, calm, nPhotos, nSeries, finePointer } from '../shared/portfolio.js';
+import { loadPortfolio, openViewer, demoBanner, fatal, p2, esc, calm, nPhotos, nSeries, nShort, finePointer, t } from '../shared/portfolio.js';
 
 let pf;
 try { pf = await loadPortfolio(); } catch (e) { fatal(e); throw e; }
@@ -119,7 +120,8 @@ const c = pf.config, $ = (id) => document.getElementById(id);
 document.title = `${c.name} · Portfolio`;
 const stage = $('stage'), imgB = $('imgB'), imgS = $('imgS');
 
-let set = pf.highlightPhotos, setName = 'Wybrane', idx = 0, shots = 0, sound = false, actx = null;
+const HL = t('v.highlights');
+let set = pf.highlightPhotos, setName = HL, idx = 0, shots = 0, sound = false, actx = null;
 let tx = 50, ty = 50, cx = 50, cy = 50, rad = 90, lockT = 0, mouseSeen = false;
 
 function show(i) {
@@ -127,16 +129,16 @@ function show(i) {
   const p = set[idx], s = pf.seriesOf(p);
   imgS.src = pf.img(p, 2400); imgS.alt = p.title;
   imgB.src = pf.img(p, 480);
-  $('t').textContent = setName === 'Wybrane' ? (s?.title || p.title) : p.title;
-  $('p').textContent = [s?.place, setName !== 'Wybrane' ? null : s?.category, `${setName} ${p2(idx + 1)} / ${p2(set.length)}`].filter(Boolean).join(' · ');
+  $('t').textContent = setName === HL ? (s?.title || p.title) : p.title;
+  $('p').textContent = [s?.place, setName !== HL ? null : s?.category, `${setName} ${p2(idx + 1)} / ${p2(set.length)}`].filter(Boolean).join(' · ');
   const e = p.exif || {};
-  $('vals').innerHTML = [e.shutter, e.aperture, e.iso, e.focal, e.lens].filter(Boolean).map((v) => `<span>${esc(v)}</span>`).join('') || '<span>brak EXIF</span>';
+  $('vals').innerHTML = [e.shutter, e.aperture, e.iso, e.focal, e.lens].filter(Boolean).map((v) => `<span>${esc(v)}</span>`).join('') || `<span>${t('v.noexif')}</span>`;
   $('cam').textContent = e.camera || '';
   $('left').textContent = `[ ${String(Math.max(0, pf.photos.length - shots)).padStart(3, '0')} ]`;
   const n = set[(idx + 1) % set.length]; new Image().src = pf.img(n, 2400);
 }
 function loadSet(list, label) {
-  set = list; setName = label; $('back').hidden = label === 'Wybrane'; show(0);
+  set = list; setName = label; $('back').hidden = label === HL; show(0);
 }
 function click() {
   if (!sound) return;
@@ -180,14 +182,14 @@ stage.addEventListener('touchend', (e) => {
 });
 $('full').onclick = function () { const on = stage.classList.toggle('full'); this.setAttribute('aria-pressed', String(on)); };
 $('zoom').onclick = () => openViewer(pf, set, idx, { onClose: () => stage.focus({ preventScroll: true }) });
-$('snd').onclick = function () { sound = !sound; this.setAttribute('aria-pressed', String(sound)); this.textContent = `Dźwięk: ${sound ? 'wł.' : 'wył.'}`; if (sound) click(); };
-$('back').onclick = () => loadSet(pf.highlightPhotos, 'Wybrane');
+$('snd').onclick = function () { sound = !sound; this.setAttribute('aria-pressed', String(sound)); this.textContent = t(sound ? 'v.soundOn' : 'v.soundOff'); if (sound) click(); };
+$('back').onclick = () => loadSet(pf.highlightPhotos, HL);
 
 /* series grid */
 $('grid').innerHTML = pf.series.map((s) => {
   const cov = pf.photo(s.cover);
   return `<button class="scard" data-slug="${esc(s.slug)}"><div class="ph">${cov ? `<img src="${pf.img(cov, 1200)}" alt="${esc(s.title)}" loading="lazy">` : ''}</div>
-    <div class="cap"><b>${esc(s.title)}</b><span>${esc([s.place, `${s.count} zdj.`].filter(Boolean).join(' · '))}</span></div></button>`;
+    <div class="cap"><b>${esc(s.title)}</b><span>${esc([s.place, nShort(s.count)].filter(Boolean).join(' · '))}</span></div></button>`;
 }).join('');
 $('grid').addEventListener('click', (e) => {
   const b = e.target.closest('.scard'); if (!b) return;
@@ -201,11 +203,11 @@ $('grid').addEventListener('click', (e) => {
 const nm = c.name.split(' ');
 $('who').innerHTML = `${esc(nm[0])}<br><span>${esc(nm.slice(1).join(' ') || c.tagline)}</span>`;
 $('aboutTxt').textContent = c.about || c.tagline;
-$('contact').innerHTML = [['E-mail', c.email], ['Instagram', c.instagram], ['Baza', c.city], ['Sprzęt', c.gear]]
-  .filter(([, v]) => v).map(([k, v]) => `<dt>${k}</dt><dd>${k === 'E-mail' ? `<a href="mailto:${esc(v)}">${esc(v)}</a>` : esc(v)}</dd>`).join('');
+$('contact').innerHTML = [['c.email', c.email], ['c.instagram', c.instagram], ['c.base', c.city], ['c.gear', c.gear]]
+  .filter(([, v]) => v).map(([k, v]) => `<dt>${t(k)}</dt><dd>${k === 'c.email' ? `<a href="mailto:${esc(v)}">${esc(v)}</a>` : esc(v)}</dd>`).join('');
 $('foot').innerHTML = `<span>© ${new Date().getFullYear()} ${esc(c.name)}</span><span>${nPhotos(pf.photos.length)} · ${nSeries(pf.series.length)}</span>`;
 
-if (!finePointer) $('hint').textContent = 'Stuknij, aby zrobić zdjęcie · przesuń palcem, aby zmienić kadr';
+if (!finePointer) $('hint').textContent = t('v.hintTouch');
 show(0);
 
 /* focus follow loop */

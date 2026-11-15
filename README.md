@@ -89,7 +89,20 @@ Tu ustawiasz imię, opis, e-mail, Instagram, sprzęt i folder ze zdjęciami:
 
 `wordmark` to duży napis na górze wersji Kinetic. Bez tego pola używane jest nazwisko.
 
-## 4. Zdjęcia z NAS
+## 4. Wersja polska i angielska
+
+Każda strona ma przełącznik **PL / EN**. Przy pierwszej wizycie język jest wybierany według ustawień przeglądarki: polski dla osób z polską przeglądarką, angielski dla pozostałych. Wybór jest zapamiętywany. Link do konkretnej wersji językowej: dopisz `?lang=en` lub `?lang=pl`, np. `http://localhost:4321/focus/?lang=en`.
+
+Napisy na stronach (menu, przyciski, podpowiedzi) są przetłumaczone. **Twoje teksty** podajesz w obu językach w formie `{ "pl": "…", "en": "…" }`, i to zarówno w `portfolio.config.json`, jak i w `seria.json`:
+
+```json
+"about": { "pl": "Studiuję w Warszawie…", "en": "I'm a student in Warsaw…" },
+"title": { "pl": "Nocne operacje", "en": "Night operations" }
+```
+
+Zwykły tekst bez podziału na języki też działa i wtedy pokazuje się w obu wersjach. Nadaje się to do nazw własnych, np. „Radom Air Show 2026”. Kategorie `lotnictwo` i `motoryzacja` mają gotowe tłumaczenia: Aviation i Automotive.
+
+## 5. Zdjęcia z NAS
 
 Najprostszy układ: **NAS przechowuje zdjęcia, a MacBook lub serwer Ubuntu uruchamia stronę.** Na NAS utwórz udział, np. `Portfolio`, z opisanym wyżej układem folderów.
 
@@ -117,7 +130,7 @@ Potem `"photosDir": "/mnt/nas/portfolio"`.
 
 Serwer pomija systemowe foldery NAS (`@eaDir`, `#recycle`, foldery zaczynające się od kropki).
 
-## 5. Wersja na stałe: Ubuntu Server
+## 6. Wersja na stałe: Ubuntu Server
 
 Są dwie możliwości.
 
@@ -145,7 +158,7 @@ Folder `dist/` skopiuj na serwer, np. `rsync -a dist/ serwer:/var/www/portfolio/
 
 > Pliki w `deploy/` to szablony. Nie zostały przetestowane na prawdziwym serwerze, więc sprawdź ścieżki przed użyciem.
 
-## 6. Przydatne polecenia
+## 7. Przydatne polecenia
 
 | Polecenie | Co robi |
 |---|---|
